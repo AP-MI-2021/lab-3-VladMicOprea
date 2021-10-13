@@ -89,11 +89,74 @@ def test_get_longest_equal_int_real():
     assert get_longest_equal_int_real([41.44, 31.31, 111.111]) == [31.31, 111.111]
 
 
+def is_prime(n):
+    '''
+    verifica daca numarul este prim
+    :param n: numar natural
+    :return: adevarat sau fals
+    '''
+    if n<2:
+        return False
+    else:
+        ok=True
+        for i in range(2, n//2 + 1):
+            if n%i == 0:
+                ok=False
+    if ok:
+        return True
+    else:
+        return False
+assert is_prime(53) == True
+
+
+def toate_numerele_sunt_formate_din_cifre_prime(list):
+    '''
+    functia verifica daca toate numerele din lista au cifrele prime
+    :param list:lista de numere intregi
+    :return:true daca toate numerele din lista au cifrele prime
+    '''
+    for i in range(len(list)):
+        while list[i] > 0:
+            x = list[i]%10
+            if is_prime(int(x)) == False:
+                return False
+            list[i] = list[i]//10
+    return True
+
+
+def get_longest_prime_digits(list):
+    '''
+    functia determina cea mai lunga subsecventa a carei numere au cifrele prime
+    :param list:lista de numere intregi
+    :return:cea mai lunga subsecventa a carei numere au cifrele prime
+    '''
+    subsecventa_max = []
+    for k in range(len(list)):
+        list[k] = int(list[k])
+    for i in range(len(list) - 1):
+        for j in range(i, len(list)):
+            if toate_numerele_sunt_formate_din_cifre_prime(list[i:j + 1]) and len(list[i:j + 1]) > len(subsecventa_max):
+                subsecventa_max = list[i:j + 1]
+    return subsecventa_max
+
+def test_get_longest_prime_digits():
+    '''
+    verifica daca functia este corecta
+    :return:cea mai lunga subsecventa a carei numere au cifrele prime
+    '''
+    assert get_longest_prime_digits([53,55,45,56]) == [53,55]
+    assert get_longest_prime_digits([45,65,76]) == []
+    assert get_longest_prime_digits([]) == []
+    assert get_longest_prime_digits([55,57,75,33,22]) == [55,57,75,33,22]
+    assert get_longest_prime_digits([55,3,25,66,75]) == [55,3,25]
+
+
 def menu():
     print("Alegeti optiunea:")
     print("1.Citire")
     print("2.Cea mai lunga subsecventa de numere ordonate crescator")
     print("3.Cea mai lunga subsecventa a carei numerele au partea intreaga egala cu partea fractionara")
+    print("4.Cea mai lunga subsecventa a carei numere au numere au cifre prime")
     print("0.Iesire")
 
 
@@ -108,6 +171,8 @@ def main():
             print(get_longest_sorted_asc(list))
         elif option == 3:
             print(get_longest_equal_int_real(list))
+        elif option == 4:
+            print(get_longest_prime_digits(list))
         elif option == 0:
             break
         menu()
